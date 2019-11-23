@@ -1,5 +1,5 @@
-const csv = require('csvtojson');
-const fs = require("fs");
+import csv from 'csvtojson';
+import fs from 'fs';
 
 const logger = fs.createWriteStream('log.txt', {
     flags: 'w' // Open file for writing. The file is created (if it does not exist) or truncated (if it exists).
