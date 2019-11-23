@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "task1": "node src/task1.js"
+    "task1": "node src/task1.js",
+    "task2": "node src/task2.js"
   },
   "author": "Olha Katsalap",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "csvtojson": "^2.0.10"
+  }
 }
