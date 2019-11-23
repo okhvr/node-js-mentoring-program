@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "task1": "node src/task1.js"
   },
   "author": "Olha Katsalap",
   "license": "ISC"
