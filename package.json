@@ -2,12 +2,12 @@
   "name": "node-js-mentoring-program",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "lint": "eslint ./src",
+    "lint": "eslint . --ext .js,.ts",
     "fix": "npm run lint -- --fix",
-    "task1": "babel-node src/task1.js",
-    "task2": "babel-node src/task2.js"
+    "task1": "ts-node src/task1.ts",
+    "task2": "ts-node src/task2.ts"
   },
   "author": "Olha Katsalap",
   "license": "ISC",
@@ -15,11 +15,15 @@
     "csvtojson": "^2.0.10"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/node": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
-    "eslint": "^6.7.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2"
+    "@types/node": "^13.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.8.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "nodemon": "^2.0.2",
+    "prettier": "^1.19.1",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.4"
   }
 }
