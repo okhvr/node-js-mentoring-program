@@ -9,7 +9,7 @@ import {
     putUserSchema,
 } from '../validation';
 import { users } from '../models';
-
+import HttpStatus from 'http-status-codes';
 const route = Router();
 
 route.get('/', validator.query(autoSuggestUsersSchema), (req: ValidatedRequest<AutoSuggestUsersSchema>, res) => {
@@ -21,7 +21,7 @@ route.get('/', validator.query(autoSuggestUsersSchema), (req: ValidatedRequest<A
 route.post('/', validator.body(postUserSchema), (req: ValidatedRequest<UsersRequestSchema>, res) => {
     const user = users.post(req);
 
-    res.status(201).send(`User with id ${user.id} created`);
+    res.status(HttpStatus.CREATED).send(`User with id ${user.id} created`);
 });
 
 route.get('/:id', (req, res) => {
@@ -30,7 +30,7 @@ route.get('/:id', (req, res) => {
     if (user) {
         res.json(user);
     } else {
-        res.status(404).json({
+        res.status(HttpStatus.NOT_FOUND).json({
             message: `User with id ${id} not found`,
         });
     }
@@ -39,9 +39,9 @@ route.get('/:id', (req, res) => {
 route.delete('/:id', (req, res) => {
     const id = users.delete(req.params.id);
     if (id) {
-        res.status(200).send(`User with id ${id} deleted`);
+        res.status(HttpStatus.NO_CONTENT).send(`User with id ${id} deleted`);
     } else {
-        res.status(404).json({
+        res.status(HttpStatus.NOT_FOUND).json({
             message: `User with id ${req.params.id} is already deleted`,
         });
     }
@@ -51,9 +51,9 @@ route.put('/:id', validator.body(putUserSchema), (req: ValidatedRequest<UsersReq
     const id = req.params.id;
     const updatedUser = users.put(req);
     if (updatedUser) {
-        res.status(200).json(updatedUser);
+        res.status(HttpStatus.OK).json(updatedUser);
     } else {
-        res.status(404).json({
+        res.status(HttpStatus.NOT_FOUND).json({
             message: `User with id ${id} is not found`,
         });
     }

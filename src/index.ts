@@ -1,6 +1,7 @@
 import express from 'express';
 import { ExpressJoiError } from 'express-joi-validation';
 import { UsersController } from './controllers';
+import HttpStatus from 'http-status-codes';
 
 const port = 3000;
 const app = express();
@@ -15,9 +16,9 @@ app.get('/', (req, res) => {
 // Custom error handler
 app.use((err: ExpressJoiError, req: express.Request, res: express.Response) => {
     if (err && err.error && err.error.isJoi) {
-        res.status(400).end(`You submitted a bad ${err.type} paramater.`);
+        res.status(HttpStatus.BAD_REQUEST).end(`You submitted a bad ${err.type} paramater.`);
     } else {
-        res.status(500).end('internal server error');
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).end('internal server error');
     }
 });
 
