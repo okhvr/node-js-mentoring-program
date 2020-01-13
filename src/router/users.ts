@@ -68,7 +68,7 @@ route.post('/', validator.body(postUserSchema), (req: ValidatedRequest<UsersRequ
     res.status(201).send(`User with id ${user.id} created`);
 });
 
-route.get('/:id', function(req, res) {
+route.get('/:id', (req, res) => {
     const id = req.params.id;
     const user = users.get(id);
     if (user && !user.isDeleted) {
@@ -80,7 +80,7 @@ route.get('/:id', function(req, res) {
     }
 });
 
-route.delete('/:id', function(req, res) {
+route.delete('/:id', (req, res) => {
     const id = req.params.id;
     const user = users.get(id);
     if (user) {
