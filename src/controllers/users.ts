@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import { User, createUser, updateUser } from '../user/user';
 import {
     validator,
     autoSuggestUsersSchema,
@@ -9,34 +8,26 @@ import {
     UsersRequestSchema,
     putUserSchema,
 } from '../validation';
+import { users } from '../models';
 
 const route = Router();
 
-const users: Map<string, User> = new Map();
-
 route.get('/', validator.query(autoSuggestUsersSchema), (req: ValidatedRequest<AutoSuggestUsersSchema>, res) => {
-    let usersList = Array.from(users.values()).filter(u => !u.isDeleted);
-    if (req.query.loginSubstring) {
-        usersList = usersList.filter(u => u.login.includes(req.query.loginSubstring));
-    }
-    usersList = usersList.sort((a, b) => (a.login < b.login ? -1 : 1));
-    if (req.query.limit) {
-        usersList = usersList.slice(0, req.query.limit);
-    }
+    const usersList = users.get(req);
+
     res.json(usersList);
 });
 
 route.post('/', validator.body(postUserSchema), (req: ValidatedRequest<UsersRequestSchema>, res) => {
-    const { login, password, age } = req.body;
-    const user: User = createUser(login, password, age);
-    users.set(user.id, user);
+    const user = users.post(req);
+
     res.status(201).send(`User with id ${user.id} created`);
 });
 
 route.get('/:id', (req, res) => {
     const id = req.params.id;
-    const user = users.get(id);
-    if (user && !user.isDeleted) {
+    const user = users.getUserById(id);
+    if (user) {
         res.json(user);
     } else {
         res.status(404).json({
@@ -46,25 +37,20 @@ route.get('/:id', (req, res) => {
 });
 
 route.delete('/:id', (req, res) => {
-    const id = req.params.id;
-    const user = users.get(id);
-    if (user) {
-        user.isDeleted = true;
+    const id = users.delete(req.params.id);
+    if (id) {
         res.status(200).send(`User with id ${id} deleted`);
     } else {
         res.status(404).json({
-            message: `User with id ${id} is already deleted`,
+            message: `User with id ${req.params.id} is already deleted`,
         });
     }
 });
 
 route.put('/:id', validator.body(putUserSchema), (req: ValidatedRequest<UsersRequestSchema>, res) => {
-    const { login, password, age } = req.body;
     const id = req.params.id;
-    const user = users.get(id);
-    if (user && !user.isDeleted) {
-        const updatedUser: User = updateUser(user, login, password, age);
-        users.set(user.id, updatedUser);
+    const updatedUser = users.put(req);
+    if (updatedUser) {
         res.status(200).json(updatedUser);
     } else {
         res.status(404).json({
@@ -73,4 +59,4 @@ route.put('/:id', validator.body(putUserSchema), (req: ValidatedRequest<UsersReq
     }
 });
 
-export default route;
+export { route as UsersController };

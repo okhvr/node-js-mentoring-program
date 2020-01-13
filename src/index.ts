@@ -1,12 +1,12 @@
 import express from 'express';
-import UsersRoutes from './router/users';
 import { ExpressJoiError } from 'express-joi-validation';
+import { UsersController } from './controllers';
 
 const port = 3000;
 const app = express();
 
 app.use(express.json());
-app.use('/users', UsersRoutes);
+app.use('/users', UsersController);
 
 app.get('/', (req, res) => {
     res.send('Server works!');
