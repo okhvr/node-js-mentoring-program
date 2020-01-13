@@ -1,51 +1,16 @@
 import { Router } from 'express';
-import Joi from '@hapi/joi';
-import { ValidatedRequestSchema, createValidator, ContainerTypes, ValidatedRequest } from 'express-joi-validation';
+import { ValidatedRequest } from 'express-joi-validation';
 import { User, createUser, updateUser } from '../user/user';
+import {
+    validator,
+    autoSuggestUsersSchema,
+    AutoSuggestUsersSchema,
+    postUserSchema,
+    UsersRequestSchema,
+    putUserSchema,
+} from '../validation';
 
 const route = Router();
-const validator = createValidator();
-
-const postUserSchema = Joi.object({
-    login: Joi.string().required(),
-    password: Joi.string()
-        .alphanum()
-        .required(),
-    age: Joi.number()
-        .integer()
-        .min(4)
-        .max(130)
-        .required(),
-});
-
-const putUserSchema = Joi.object({
-    login: Joi.string(),
-    password: Joi.string().alphanum(),
-    age: Joi.number()
-        .integer()
-        .min(4)
-        .max(130),
-});
-
-const autoSuggestUsersSchema = Joi.object({
-    loginSubstring: Joi.string(),
-    limit: Joi.number(),
-});
-
-interface UsersRequestSchema extends ValidatedRequestSchema {
-    [ContainerTypes.Body]: {
-        login: string;
-        password: string;
-        age: number;
-    };
-}
-
-interface AutoSuggestUsersSchema extends ValidatedRequestSchema {
-    [ContainerTypes.Query]: {
-        loginSubstring: string;
-        limit: number;
-    };
-}
 
 const users: Map<string, User> = new Map();
 
