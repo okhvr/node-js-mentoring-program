@@ -15,9 +15,7 @@ app.get('/', (req, res) => {
 // Custom error handler
 app.use((err: ExpressJoiError, req: express.Request, res: express.Response) => {
     if (err && err.error && err.error.isJoi) {
-        const e: ExpressJoiError = err;
-        // e.g "you submitted a bad query"
-        res.status(400).end(`You submitted a bad ${e.type} paramater.`);
+        res.status(400).end(`You submitted a bad ${err.type} paramater.`);
     } else {
         res.status(500).end('internal server error');
     }
@@ -25,6 +23,7 @@ app.use((err: ExpressJoiError, req: express.Request, res: express.Response) => {
 
 app.listen(port, err => {
     if (err) {
+        console.log(`An eror occured: ${err.message}`);
         throw err;
     }
     console.log(`Server is listening on ${port}`);
